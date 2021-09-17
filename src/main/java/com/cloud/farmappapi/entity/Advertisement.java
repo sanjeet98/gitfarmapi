@@ -44,6 +44,10 @@ public class Advertisement {
 	@Column(name="stock")
 	private String availableStock;
 	
+	
+	/**
+	 * postedBy field will contain name of Dealer retrieved through session
+	 */
 	@Column(name="postedby")
 	private String PostedBy;
 	/**
