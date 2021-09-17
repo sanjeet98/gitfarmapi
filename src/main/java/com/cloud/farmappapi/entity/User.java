@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.cloud.farmappapi.model;
+package com.cloud.farmappapi.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

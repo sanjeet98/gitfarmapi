@@ -26,7 +26,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 			WebRequest request) {
 
 		UserNotFoundExceptionResponse exceptionResponse = new UserNotFoundExceptionResponse(ex.getMessage());
-		return new ResponseEntity<Object>(exceptionResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(exceptionResponse, HttpStatus.NOT_FOUND);
 	}
 	
 	

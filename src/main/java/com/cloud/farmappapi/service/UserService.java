@@ -2,7 +2,7 @@ package com.cloud.farmappapi.service;
 
 import java.util.List;
 
-import com.cloud.farmappapi.model.User;
+import com.cloud.farmappapi.entity.User;
 
 public interface UserService  {
 	

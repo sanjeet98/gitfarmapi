@@ -16,17 +16,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cloud.farmappapi.entity.User;
 import com.cloud.farmappapi.exception.UserAlreadyExistException;
-import com.cloud.farmappapi.model.User;
+import com.cloud.farmappapi.exception.UserNotFoundException;
 import com.cloud.farmappapi.repository.UserRepository;
+import com.cloud.farmappapi.service.MapValidationErrorService;
 import com.cloud.farmappapi.service.UserService;
-import com.cloud.farmappapi.serviceImpl.MapValidationErrorService;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 	@Autowired
-	private UserRepository userRepo;
+	private UserRepository userRepository;
 	
 	@Autowired
 	private UserService userService;
@@ -62,11 +63,15 @@ public class UserController {
 	{
 		//if (session.getAttribute("Role") != null && session.getAttribute("userType").equals("Client"))
 		//{
-		User user = userService.findByLoginName(loginName);
-		return new ResponseEntity<User>(user, HttpStatus.OK);
+		
+		User foundUser=userService.findByLoginName(loginName);
+		
+		return new ResponseEntity<User>(foundUser, HttpStatus.OK);
 		//}
 		//return new ResponseEntity<String>("You do not have Access!!!", HttpStatus.BAD_REQUEST);
 	}
+	
+	
 	
 	
 	/**
@@ -77,7 +82,7 @@ public class UserController {
 	public List<User> getAllUsers()
 	{
 		
-		return userRepo.findAll();
+		return userRepository.findAll();
 	}
 	
 }
