@@ -36,6 +36,11 @@ public class User {
 	@Column(name="passwords")
 	private String pwd;
 	
+	
+	/**
+	 * This is Role of User 
+	 * example Admin,Farmer,Dealer
+	 */
 	@Column(name="roles")
 	private String Role;
 
