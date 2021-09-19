@@ -13,7 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.*;
 
 /**
- * @author kmahendr
+ * @author Sanjeet
  *
  */
 @Service
@@ -34,7 +34,5 @@ public class MapValidationErrorService {
 			return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
 		}
 		return null;
-
 	}
-
 }

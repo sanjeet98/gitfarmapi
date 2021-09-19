@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.cloud.farmappapi.controller;
 
 import java.util.List;
@@ -15,72 +18,56 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cloud.farmappapi.entity.User;
-import com.cloud.farmappapi.exception.UserAlreadyExistException;
-import com.cloud.farmappapi.repository.UserRepository;
+import com.cloud.farmappapi.entity.Advertisement;
+import com.cloud.farmappapi.exception.AdvertisementAlreadyExistException;
+import com.cloud.farmappapi.service.AdvertisementService;
 import com.cloud.farmappapi.service.MapValidationErrorService;
-import com.cloud.farmappapi.service.UserService;
 
+/**
+ * @author Sanjeet
+ * 
+ */
 @RestController
-@RequestMapping("/api/user")
-public class UserController {
-	@Autowired
-	private UserRepository userRepository;
+@RequestMapping("/api/user/advertisement")
+public class AdvertisementController {
 	
 	@Autowired
-	private UserService userService;
+	private AdvertisementService advertisementService;
 	
 	@Autowired
 	private MapValidationErrorService mapValidationErrorService;
 	
-	
-	
-	/**
-	 * This mapping adds user to data base just change Validated to valid if problem on frontend
-	 * @param user-  user object
-	 * @param result- Result without errors
-	 * @return
-	 */
-	@PostMapping("/register")
-	public ResponseEntity<?> createNewDeveloper(@RequestBody User user, BindingResult result) {
+	@PostMapping("/create")
+	public ResponseEntity<?> createNewDeveloper(@RequestBody Advertisement advertisement, BindingResult result) {
 		ResponseEntity<?> errorMap = mapValidationErrorService.mapValidationError(result);
 		if (errorMap != null)
 			return errorMap;
 		
 		try {
-			User savedUser = userService.saveUser(user);
-			return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
+			Advertisement savedAdvertisement = advertisementService.saveAdvertisement(advertisement);
+			return new ResponseEntity<Advertisement>(savedAdvertisement, HttpStatus.CREATED);
 		} catch (Exception e) {
-			throw new UserAlreadyExistException("Client Already exists ! Please Login");
-		}
-		
+			throw new AdvertisementAlreadyExistException("Advertisement Already exists! Please Add New Advertisement");
+		}	
 	}
 	
-	@GetMapping("/{loginName}")
-	public ResponseEntity<?> findUserByLoginName(@PathVariable String loginName,HttpSession session) 
+	@GetMapping("/{title}")
+	public ResponseEntity<?> findAdvertisementByTitle(@PathVariable String title,HttpSession session) 
 	{
 		//if (session.getAttribute("Role") != null && session.getAttribute("userType").equals("Client"))
 		//{
 		
-		User foundUser=userService.findByLoginName(loginName);
+		Advertisement foundAdvertisement=advertisementService.findBytitle(title);
 		
-		return new ResponseEntity<User>(foundUser, HttpStatus.OK);
+		return new ResponseEntity<Advertisement>(foundAdvertisement, HttpStatus.OK);
 		//}
 		//return new ResponseEntity<String>("You do not have Access!!!", HttpStatus.BAD_REQUEST);
 	}
 	
-	
-	
-	
-	/**
-	 * Finds all the users in table
-	 * @return
-	 */
 	@GetMapping("/all")
-	public List<User> getAllUsers()
+	public ResponseEntity<?> getAllAdvertisements()
 	{
-		
-		return userRepository.findAll();
+		List<Advertisement> advertisements = advertisementService.findAll();
+		return new ResponseEntity<List<Advertisement>>(advertisements, HttpStatus.OK);
 	}
-	
 }
