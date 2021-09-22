@@ -5,6 +5,7 @@ package com.cloud.farmappapi.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import com.cloud.farmappapi.entity.Advertisement;
 import com.cloud.farmappapi.exception.AdvertisementAlreadyExistException;
 import com.cloud.farmappapi.exception.AdvertisementNotFoundException;
 import com.cloud.farmappapi.repository.AdvertisementRepository;
+import com.cloud.farmappapi.utilities.GlobalLogger;
 
 /**
  * @author Sanjeet
@@ -22,10 +24,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 	
 	@Autowired
 	private AdvertisementRepository advertisementRepository;
-
+	
+	private Logger logger = GlobalLogger.getLogger(AdvertisementServiceImpl.class);
+	
 	@Override
 	public Advertisement saveAdvertisement(Advertisement Advertisement) {
-		// TODO Auto-generated method stub
+		logger.info("Inside advertisement service adding advertisement");
 		if (Advertisement.getTitle() == null) {
 			throw new NullPointerException("Please Enter All Values in the field");
 		}
@@ -40,6 +44,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 	
 	@Override
 	public Advertisement findBytitle(String title) {
+		logger.info("Inside Advertisement service getAdvertisementBytitle");
 		if (title == null) {
 			
 			throw new NullPointerException("Please Provide Title");
@@ -55,6 +60,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
 	@Override
 	public Advertisement findByadvertiseIdentifier(String advertiseIdentifier) {
+		logger.info("Inside Advertisement service find by Ad Id");
 		if (advertiseIdentifier == null) {
 			
 			throw new NullPointerException("Please Provide Advertise Id");
@@ -70,6 +76,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
 	@Override
 	public Advertisement findByPostedBy(String PostedBy) {
+		logger.info("Inside Advertisement service find by Posted Id");
 		@SuppressWarnings("unused")
 		Advertisement advertisement=null;
 		if (PostedBy == null) {
@@ -81,8 +88,29 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 			
 			throw new AdvertisementNotFoundException("Advertisement with PostedBy : " + PostedBy + " does not exists");
 		}
-		return advertisementRepository.findByPostedBy(PostedBy);
+		return advertisementRepository.findByPostedBy(PostedBy);	
+	}
+	/**
+	 * Updating or modifying advertisement details
+	 */
+	@Override
+	public Advertisement updateAdvertisement(Advertisement advertisement) {
+Advertisement oldAdvertisement =null;
 		
+		if (advertisement.getTitle() == null) {
+			logger.info("Inside Advertisement service update Advertisement");
+			throw new NullPointerException("Please Fill the Required Fields");
+		}
+		
+		if ((oldAdvertisement=advertisementRepository.findBytitle(advertisement.getTitle())) == null) {
+			logger.info("Inside Advertisement service update Advertisement");
+			throw new AdvertisementNotFoundException("Advertisement with title: " + advertisement.getTitle() + " does not exists");
+		}
+		
+		logger.info("Inside Advertisement service update Advertisement");
+		advertisement.setAdvertiseId(oldAdvertisement.getAdvertiseId());
+		oldAdvertisement = advertisement;
+		return advertisementRepository.save(oldAdvertisement);
 	}
 
 	@Override
@@ -94,5 +122,25 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 			
 			throw new AdvertisementNotFoundException("No Advertisement Found");
 		}
+	}
+	/**
+	 * Deleting advertisement
+	 */
+	@SuppressWarnings("unused")
+	@Override
+	public void deleteByadvertiseIdentifier(String advertiseIdentifier) {	
+		Advertisement advertisement = null;
+		
+		if (advertiseIdentifier == null) {
+			logger.info("Inside Advertisement service delete Advertisement");
+			throw new NullPointerException("Please Provide Advertise Identifier");
+		}
+		
+		if ((advertisement = advertisementRepository.findByadvertiseIdentifier(advertiseIdentifier)) == null) {
+			logger.info("Inside Advertisement service delete Advertisement");
+			throw new AdvertisementNotFoundException("Advertisement with task identifier: " + advertiseIdentifier + " does not exists");
+		}
+		logger.info("Inside Advertisement service delete Advertisement");
+		advertisementRepository.deleteByadvertiseIdentifier(advertiseIdentifier);
 	}
 }

@@ -18,5 +18,6 @@ public interface AdvertisementRepository extends JpaRepository <Advertisement, L
 	public Advertisement findBytitle(String title);
 	public Advertisement findByadvertiseIdentifier(String advertiseIdentifier);
 	public Advertisement findByPostedBy(String postedBy);
+	public void deleteByadvertiseIdentifier(String advertiseIdentifier);
 
 }
